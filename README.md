@@ -1,3 +1,5 @@
+https://roadmap.sh/projects/url-shortening-service
+
 # URLShortener
 
 Lightweight URL shortener built with ASP.NET Core targeting .NET 10. Uses Entity Framework Core + PostgreSQL and exposes a simple HTTP API with OpenAPI available in Development.
