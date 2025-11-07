@@ -1,6 +1,36 @@
-@URLShortener_HostAddress = http://localhost:5136
+### Accept = format of the response
+### Content-Type = format of request body
 
-GET {{URLShortener_HostAddress}}/weatherforecast/
+@URLShortener_HostAddress = https://localhost:7138/URLShortener
+
+POST {{URLShortener_HostAddress}}
+Content-Type: application/json
 Accept: application/json
+{
+   "url": "https://www.netflix.com/"
+}
 
 ###
+POST {{URLShortener_HostAddress}}
+Content-Type: application/json
+Accept: application/json
+{
+   "url": "example.com"
+}
+
+### 
+GET {{URLShortener_HostAddress}}/1
+
+### Delete given short code
+DELETE {{URLShortener_HostAddress}}/3
+
+### Delete All
+DELETE {{URLShortener_HostAddress}}
+
+###
+PUT {{URLShortener_HostAddress}}/8
+Content-Type: application/json
+Accept: application/json
+{
+   "url": "https://www.google.com"
+}
