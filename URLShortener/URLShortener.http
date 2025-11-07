@@ -3,6 +3,7 @@
 
 @URLShortener_HostAddress = https://localhost:7138/URLShortener
 
+### Create short code
 POST {{URLShortener_HostAddress}}
 Content-Type: application/json
 Accept: application/json
@@ -10,16 +11,16 @@ Accept: application/json
    "url": "https://www.netflix.com/"
 }
 
-### 
+### Get redirect
 GET {{URLShortener_HostAddress}}/9
 
-### Delete given short code
+### Delete given short code.
 DELETE {{URLShortener_HostAddress}}/3
 
-### Delete All
+### Delete all short codes.
 DELETE {{URLShortener_HostAddress}}
 
-###
+### Update longUrl for shortCode
 PUT {{URLShortener_HostAddress}}/8
 Content-Type: application/json
 Accept: application/json
@@ -27,5 +28,5 @@ Accept: application/json
    "url": "https://www.google.com"
 }
 
-###
+### Get access stats for particular short code.
 GET {{URLShortener_HostAddress}}/9/stats
