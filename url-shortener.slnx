@@ -2,5 +2,5 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
-  <Project Path="URLShortener/URLShortener.csproj" />
+  <Project Path="source/url-shortener.csproj" />
 </Solution>
