@@ -21,7 +21,7 @@ namespace URLShortener.Controllers
             try
             {
                 var shortCode = await this.service.ShortenCode(request.Url);
-                var shortUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/{shortCode}";
+                var shortUrl = $"https://localhost:7138/URLShortener/{shortCode}";
 
                 return Created(shortUrl, new { shortUrl });
             }
