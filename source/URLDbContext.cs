@@ -27,18 +27,6 @@ public class URLDbContext : DbContext
     }
 
     /// <summary>
-    /// This method configures how the DbContext connects to the database.
-    /// Here, we are telling EF Core to use PostgreSQL and providing the connection string.
-    /// You only need this method if you aren't using dependency injection to provide options.
-    /// </summary>
-    /// <param name="optionsBuilder">Builder used to configure database options</param>
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // Connect to PostgreSQL using Npgsql provider
-        optionsBuilder.UseNpgsql(@"Host=localhost;Port=5432;Database=local;Username=admin;Password=admin;");
-    }
-
-    /// <summary>
     /// This method is used to customize the model (database schema) that EF Core generates.
     /// Here, we are specifying that all tables created by this DbContext should be in the "url" schema instead of the default "public" schema.
     /// </summary>
