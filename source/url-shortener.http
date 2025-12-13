@@ -1,24 +1,23 @@
 ### Accept = format of the response
 ### Content-Type = format of request body
 
-@URLShortener_HostAddress = https://localhost:7138/URLShortener
+@URLShortener_HostAddress = https://localhost:7138/UrlShortener
 
 ### Create short code
 POST {{URLShortener_HostAddress}}
 Content-Type: application/json
 Accept: application/json
+
 {
-   "url": "https://www.netflix.com/"
+   "Url": "https://www.netflix.com/"
 }
 
 ### Get redirect
-GET {{URLShortener_HostAddress}}/9
+GET {{URLShortener_HostAddress}}/8
 
 ### Delete given short code.
 DELETE {{URLShortener_HostAddress}}/3
 
-### Delete all short codes.
-DELETE {{URLShortener_HostAddress}}
 
 ### Update longUrl for shortCode
 PUT {{URLShortener_HostAddress}}/8
@@ -29,4 +28,4 @@ Accept: application/json
 }
 
 ### Get access stats for particular short code.
-GET {{URLShortener_HostAddress}}/9/stats
+GET {{URLShortener_HostAddress}}/8/stats

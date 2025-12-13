@@ -14,10 +14,10 @@ builder.Services.AddDbContext<URLDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Repositories
-builder.Services.AddScoped<IURLRepository, URLRepository>();
+builder.Services.AddScoped<IUrlRepository, UrlRepository>();
 
 // Services
-builder.Services.AddScoped<IURLService, URLService>();
+builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddSingleton<IGlobalCounterService, GlobalCounterService>();
 builder.Services.AddHostedService<CounterInitializerService>();
 

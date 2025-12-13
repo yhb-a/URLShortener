@@ -6,87 +6,64 @@ namespace URLShortener.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class URLShortenerController : ControllerBase
+    public class UrlShortenerController(IUrlService service) : ControllerBase
     {
-        private readonly IURLService service;
-
-        public URLShortenerController(IURLService service)
-        {
-            this.service = service;
-        }
-
         [HttpPost]
-        public async Task<IActionResult> ShortenLongURL([FromBody] RequestModel request)
+        public async Task<IActionResult> ShortenLongUrl([FromBody] ShortenLongUrlRequest shortenLongUrlRequest)
         {
             try
             {
-                var shortCode = await this.service.ShortenCode(request.Url);
-                var shortUrl = $"https://localhost:7138/URLShortener/{shortCode}";
-
-                return Created(shortUrl, new { shortUrl });
+                var shortCode = await service.ShortenLongUrlAsync(shortenLongUrlRequest.Url);
+                var shortenedUrl = $"https://localhost:7138/URLShortener/{shortCode}";
+                
+                return Ok(shortenedUrl);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Error trying to shorten code");
+                return BadRequest($"Error trying to shorten code for longUrl:" +
+                                  $" {shortenLongUrlRequest.Url} with exception: " + ex);
             }
         }
 
         [HttpGet("{shortCode}")]
-        public async Task<IActionResult> RedirectToOriginalURL(string shortCode)
+        public async Task<IActionResult> RedirectToOriginalUrl(string shortCode)
         {
             try
             {
-                var result = await this.service.GetLongUrl(shortCode);
+                var longUrlResult = await service.GetLongUrlAsync(shortCode);
 
-                await this.service.IncrementAccessCount(shortCode);
-
-                return Redirect(result);
+                if (!longUrlResult.IsSuccessful)
+                {
+                    return NotFound(longUrlResult.ErrorMessage);
+                }
+                
+                await service.UpdateAccessCountAsync(shortCode);
+                
+                return Redirect(longUrlResult.Data);
             }
-            catch (NotFoundException)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
-            catch (Exception)
-            {
-                return BadRequest($"Error retrieving url for shortCode: {shortCode}");
+                return BadRequest($"Error retrieving url for shortCode: { shortCode } with exception: {ex}");
             }
         }
-
-        [HttpDelete("{shortCode}")]
-        public async Task<IActionResult>Delete(string shortCode)
-        {
-            try
-            {
-                await this.service.Delete(shortCode);
-
-                return NoContent();
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-            catch (Exception)
-            {
-                return BadRequest($"Error deleting for shortCode: {shortCode}");
-            }
-        }
-
+        
         [HttpPut("{shortCode}")]
-        public async Task<IActionResult> UpdateLongURL(string shortCode, [FromBody] RequestModel request)
+        public async Task<IActionResult> UpdateLongUrl(string shortCode, [FromBody] ShortenLongUrlRequest shortenLongUrlRequest)
         {
             try
             {
-                await this.service.UpdateLongUrl(shortCode, request.Url);
+                var result = await service.UpdateLongUrlAsync(shortCode, shortenLongUrlRequest.Url);
 
+                if (!result.IsSuccessful)
+                {
+                    return NotFound(result.ErrorMessage);
+                }
+                
                 return Ok();
             }
-            catch (NotFoundException)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
-            catch (Exception)
-            {
-                return BadRequest($"Error updating url for shortCode: {shortCode}");
+                return BadRequest($"Error updating url for shortCode: {shortCode}  with exception: {ex}");
             }
         }
 
@@ -95,25 +72,39 @@ namespace URLShortener.Controllers
         {
             try
             {
-                var accessCount = await this.service.GetAccessCount(shortCode);
+                var result = await service.GetAccessCountAsync(shortCode);
 
-                return Ok(accessCount);
+                if (!result.IsSuccessful)
+                {
+                    return NotFound(result.ErrorMessage);
+                }
+
+                return Ok(result.Data);
             }
-            catch (NotFoundException)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
-            catch (Exception)
-            {
-                return BadRequest($"Error fetching access count for shortCode: {shortCode}");
+                return BadRequest($"Error fetching access count for shortCode: {shortCode}  with exception: {ex}");
             }
         }
-
-        [HttpDelete]
-        public IActionResult DeleteAll()
+        
+        [HttpDelete("{shortCode}")]
+        public async Task<IActionResult> Delete(string shortCode)
         {
-            this.service.DeleteAll();
-            return Ok();
+            try
+            {
+                var result = await service.DeleteAsync(shortCode);
+
+                if (!result.IsSuccessful)
+                {
+                    return NotFound(result.ErrorMessage);
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error deleting for shortCode: {shortCode} with exception: {ex} ");
+            }
         }
     }
 }
